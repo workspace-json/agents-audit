@@ -19,3 +19,6 @@ All three npm packages are published from this single monorepo and point back to
 `workspace-json/agents-audit` in their package metadata.
 
 Homepage: https://workspacejson.dev
+
+Releases are intended to use GitHub Actions trusted publishing with provenance,
+not long-lived npm tokens.
