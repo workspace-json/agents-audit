@@ -4,9 +4,9 @@ This repository is the canonical source for the `agents-audit` release family.
 
 Published packages:
 
-- `@workspacejson/spec`
-- `@workspacejson/rules`
-- `agents-audit`
+- [`@workspacejson/spec`](https://www.npmjs.com/package/@workspacejson/spec)
+- [`@workspacejson/rules`](https://www.npmjs.com/package/@workspacejson/rules)
+- [`agents-audit`](https://www.npmjs.com/package/agents-audit)
 
 What lives here:
 
@@ -22,3 +22,6 @@ Homepage: https://workspacejson.dev
 
 Releases are intended to use GitHub Actions trusted publishing with provenance,
 not long-lived npm tokens.
+
+GitHub release tags mirror npm package versions so the repository history and the
+registry history stay aligned.
