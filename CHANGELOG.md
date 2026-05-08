@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Tightened `agents.workspace.json` validation for package paths and `generatedAt`
+- Added regression tests for CLI scan paths, fail-on exit codes, report output, and interactive navigation
+- Documented the positional `scan <path>` CLI contract and removed the unsupported `--dir` example
+
 ## 0.1.1 - 2026-05-06
 
 - Added npm discoverability keywords to `@workspacejson/spec`
