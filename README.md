@@ -1,10 +1,15 @@
-# workspace.json — agents-audit monorepo
+# agents-audit monorepo
 
-**workspace.json** (`agents.workspace.json`) is an open metadata format that gives AI coding assistants structured intelligence about a codebase — fragility scores, framework detection, co-change patterns, and hygiene signals — so they can make better decisions without reading every file.
+**workspace.json** is an open specification for structured AI agent codebase
+intelligence. A machine-generated JSON file at `.agents/agents.workspace.json`
+gives AI coding agents structured context about your repository.
 
-**Current release: v0.3.0** · [Spec →](https://www.workspacejson.dev/spec/) · [npm →](https://www.npmjs.com/package/agents-audit) · [Changelog →](./CHANGELOG.md)
+**Current version: v0.3** ([spec](./packages/spec/) · [rendered docs](https://workspacejson.dev/spec/) · [changelog](./CHANGELOG.md))
 
-This monorepo is the canonical home for the workspace.json specification, tooling, and rule engine.
+**Shipped consumer integrations:**
+- [`jnuyens/gsd-plugin v2.42.3`](https://github.com/jnuyens/gsd-plugin/releases/tag/v2.42.3) — Claude Code plugin reading `.agents/agents.workspace.json` at SessionStart
+
+This repository is the canonical source for the agents-audit release family.
 
 ## Packages
 
@@ -21,12 +26,6 @@ The canonical v0.3 specification lives at [`packages/spec/`](./packages/spec/).
 - JSON Schema: [`packages/spec/schema/v1.json`](./packages/spec/schema/v1.json)
 - TypeScript types: [`packages/spec/src/types.ts`](./packages/spec/src/types.ts)
 - Rendered: [workspacejson.dev/spec/](https://www.workspacejson.dev/spec/)
-
-## Shipped Consumer Integrations
-
-| Tool | Version | Role |
-| --- | --- | --- |
-| [gsd-plugin](https://github.com/jnuyens/gsd-plugin) | v2.42.3 | First shipped consumer — reads `generated.frameworkManifest`, `generated.fileIndex`, `manual.fragileFiles`, `manual.coChangePatterns` from `.agents/agents.workspace.json` at session start |
 
 ## Quick Start
 
