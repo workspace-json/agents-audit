@@ -1,44 +1,57 @@
-# agents-audit workspace
+# workspace.json — agents-audit monorepo
 
-Monorepo for the `agents-audit` CLI, the `@workspacejson/spec` schema package, and the `@workspacejson/rules` engine package.
+**workspace.json** (`agents.workspace.json`) is an open metadata format that gives AI coding assistants structured intelligence about a codebase — fragility scores, framework detection, co-change patterns, and hygiene signals — so they can make better decisions without reading every file.
 
-This repository is the canonical workspace for the project. Keep package entrypoints aligned with:
+**Current release: v0.3.0** · [Spec →](https://www.workspacejson.dev/spec/) · [npm →](https://www.npmjs.com/package/agents-audit) · [Changelog →](./CHANGELOG.md)
 
-- `packages/spec/src/index.ts`
-- `packages/rules/src/index.ts`
-- `packages/agents-audit/src/index.ts`
-- `packages/agents-audit/src/cli.ts`
+This monorepo is the canonical home for the workspace.json specification, tooling, and rule engine.
 
 ## Packages
 
-| Package | Purpose |
-| --- | --- |
-| `@workspacejson/spec` | JSON Schema and TypeScript types for `agents.workspace.json` |
-| `@workspacejson/rules` | Deterministic parser, scanner, validator, and rule engine |
-| `agents-audit` | CLI for scanning `AGENTS.md` hygiene and workspace metadata |
+| Package | Version | Purpose |
+| --- | --- | --- |
+| [`@workspacejson/spec`](https://www.npmjs.com/package/@workspacejson/spec) | 0.3.0 | JSON Schema and TypeScript types for `agents.workspace.json` |
+| [`@workspacejson/rules`](https://www.npmjs.com/package/@workspacejson/rules) | 0.3.0 | Deterministic parser, scanner, validator, and rule engine |
+| [`agents-audit`](https://www.npmjs.com/package/agents-audit) | 0.3.0 | CLI for scanning `AGENTS.md` hygiene and workspace metadata |
+
+## Spec Source
+
+The canonical v0.3 specification lives at [`packages/spec/`](./packages/spec/).
+
+- JSON Schema: [`packages/spec/schema/v1.json`](./packages/spec/schema/v1.json)
+- TypeScript types: [`packages/spec/src/types.ts`](./packages/spec/src/types.ts)
+- Rendered: [workspacejson.dev/spec/](https://www.workspacejson.dev/spec/)
+
+## Shipped Consumer Integrations
+
+| Tool | Version | Role |
+| --- | --- | --- |
+| [gsd-plugin](https://github.com/jnuyens/gsd-plugin) | v2.42.3 | First shipped consumer — reads `generated.frameworkManifest`, `generated.fileIndex`, `manual.fragileFiles`, `manual.coChangePatterns` from `.agents/agents.workspace.json` at session start |
+
+## Quick Start
+
+```bash
+# Audit AGENTS.md hygiene in any repo
+npx agents-audit
+
+# Generate agents.workspace.json
+npx agents-audit generate
+```
 
 ## Repository Layout
 
 ```text
 agents-audit/
 ├── packages/
-│   ├── spec/
-│   ├── rules/
-│   └── agents-audit/
+│   ├── spec/          — JSON Schema + TypeScript types
+│   ├── rules/         — Rule engine and validator
+│   └── agents-audit/  — CLI binary
 ├── .github/
 ├── pnpm-workspace.yaml
 ├── package.json
 ├── README.md
 └── CHANGELOG.md
 ```
-
-## What Ships
-
-- `packages/spec` publishes the schema and types for `agents.workspace.json`
-- `packages/rules` publishes the rule engine and supporting APIs
-- `packages/agents-audit` publishes the CLI binary
-
-The CLI reads repository content, validates `AGENTS.md`, and can generate `agents.workspace.json` for a repo snapshot.
 
 ## Local Development
 
@@ -56,17 +69,9 @@ pnpm --filter agents-audit build
 node packages/agents-audit/dist/cli.js scan .
 ```
 
-## Validation
-
-The repository is expected to validate itself.
-
-- Package exports must resolve
-- Package tarballs must pack cleanly
-- `agents-audit` must pass on this repository
-
 ## Release Notes
 
-Version history is tracked in [`CHANGELOG.md`](./CHANGELOG.md).
+Version history is tracked in [`CHANGELOG.md`](./CHANGELOG.md). GitHub release tags mirror npm package versions.
 
 ## Support Files
 
