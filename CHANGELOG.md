@@ -1,8 +1,6 @@
 # Changelog
 
-## Unreleased
-
-## 0.2.0 - 2026-05-08
+## [0.2.0] - 2026-05-08
 
 ### Breaking changes
 
@@ -42,13 +40,13 @@
 - `incremental-cache` tests refactored from shared `beforeEach`/`afterEach` to per-test `withTempDir` helper.
 - CI self-audit now fails on `error`-severity findings (removed `continue-on-error`).
 
-## 0.1.1 - 2026-05-06
+## [0.1.1] - 2026-05-06
 
 - Added npm discoverability keywords to `@workspacejson/spec`
 - Added npm discoverability keywords to `@workspacejson/rules`
 - Added npm discoverability keywords to `agents-audit`
 
-## 0.1.0 - 2026-05-06
+## [0.1.0] - 2026-05-06
 
 - Initial workspace implementation for `agents-audit`
 - Added `@workspacejson/spec` and `@workspacejson/rules`

@@ -1,0 +1,56 @@
+{
+  "manual": {},
+  "generated": {
+    "specVersion": "0.4",
+    "generatedAt": "2026-06-02T00:00:00.000Z",
+    "by": { "name": "agents-audit", "version": "0.4.1" },
+    "frameworkManifest": [],
+    "fileIndex": {},
+    "coChange": [],
+    "fragility": [],
+    "topology": {
+      "packageCount": 3,
+      "type": "monorepo",
+      "ciProvider": "github-actions",
+      "agentFiles": {
+        "agentsMd": "AGENTS.md",
+        "workspaceJson": ".agents/workspace.json"
+      }
+    },
+    "conventions": [
+      {
+        "raw": "Workspace packages live under packages/*",
+        "type": "directory-layout",
+        "canonical": "workspace-packages-under-packages"
+      },
+      {
+        "raw": "Source code lives under src/",
+        "type": "directory-layout",
+        "canonical": "source-in-src"
+      },
+      {
+        "raw": "Tests are colocated with implementation",
+        "type": "structural",
+        "canonical": "colocated-tests"
+      },
+      {
+        "raw": "Published packages ship dist/ only",
+        "type": "structural",
+        "canonical": "publish-dist-only"
+      }
+    ],
+    "hygiene": {
+      "score": 100,
+      "grade": "A",
+      "failCount": 0,
+      "warnCount": 0,
+      "scannedAt": "2026-06-02T00:00:00.000Z"
+    }
+  },
+  "agents": {},
+  "health": {
+    "intelligenceState": "INSUFFICIENT_DATA",
+    "observationCount": 0,
+    "confidence": 0
+  }
+}
