@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.4.2] - 2026-07-16
+
+### Changed
+
+- Published `@workspacejson/spec` 0.4.2 release material: a command-line validator,
+  synchronized package metadata, and documentation aligned on `.agents/workspace.json`.
+- `agents-audit generate` now preserves human `manual` evidence, refuses unsafe overwrites,
+  skips timestamp-only rewrites, and supports `--check` for non-writing CI drift detection.
 ## [0.2.0] - 2026-05-08
 
 ### Breaking changes
