@@ -31,8 +31,8 @@ importers:
         specifier: workspace:*
         version: link:../rules
       '@workspacejson/spec':
-        specifier: 0.3.0
-        version: 0.3.0
+        specifier: 0.4.1
+        version: 0.4.1
       boxen:
         specifier: ^7.1.1
         version: 7.1.1
@@ -65,11 +65,27 @@ importers:
         specifier: ^1.6.0
         version: 1.6.1(@types/node@22.19.17)
 
+  packages/cli:
+    dependencies:
+      '@workspacejson/spec':
+        specifier: 0.4.1
+        version: 0.4.1
+    devDependencies:
+      tsup:
+        specifier: ^8.0.0
+        version: 8.5.1(postcss@8.5.14)(typescript@5.9.3)
+      typescript:
+        specifier: ^5.4.0
+        version: 5.9.3
+      vitest:
+        specifier: ^1.6.0
+        version: 1.6.1(@types/node@22.19.17)
+
   packages/rules:
     dependencies:
       '@workspacejson/spec':
-        specifier: 0.3.0
-        version: 0.3.0
+        specifier: 0.4.1
+        version: 0.4.1
       ajv:
         specifier: ^8.16.0
         version: 8.20.0
@@ -109,6 +125,10 @@ importers:
         version: 1.6.1(@types/node@22.19.17)
 
   packages/spec:
+    dependencies:
+      ajv:
+        specifier: ^8.20.0
+        version: 8.20.0
     devDependencies:
       json-schema-to-typescript:
         specifier: ^14.0.0
@@ -738,8 +758,8 @@ packages:
   '@vitest/utils@1.6.1':
     resolution: {integrity: sha512-jOrrUvXM4Av9ZWiG1EajNto0u96kWAhJ1LmPmJhXXQx/32MecEKd10pOLYgS2BQx1TgkGhloPU1ArDW2vvaY6g==}
 
-  '@workspacejson/spec@0.3.0':
-    resolution: {integrity: sha512-zwfgsRdA4DpdkUigJh5L2UeHsCYrBgpLWpyp5psJ5oQ/d1hpwhqQRGiesfA6rsIWpdNTbliFN7iPSWBMM4gD6w==}
+  '@workspacejson/spec@0.4.1':
+    resolution: {integrity: sha512-urLGyab4/KfY9xgSkYVhqv8eUmczSdOxn7Um0OGZT1+g9j+mGMjDClsB1bmQMCsisaunWnlkrA7SURS3odKlDg==}
     engines: {node: '>=20.0.0'}
 
   acorn-walk@8.3.5:
@@ -2465,7 +2485,7 @@ snapshots:
       loupe: 2.3.7
       pretty-format: 29.7.0
 
-  '@workspacejson/spec@0.3.0': {}
+  '@workspacejson/spec@0.4.1': {}
 
   acorn-walk@8.3.5:
     dependencies:
