@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.4.2] - 2026-07-16
+
+### Changed
+
+- Published `@workspacejson/spec` 0.4.2 release material: a command-line validator,
+  synchronized package metadata, and documentation aligned on `.agents/workspace.json`.
+- `agents-audit generate` now preserves human `manual` evidence, refuses unsafe overwrites,
+  skips timestamp-only rewrites, and supports `--check` for non-writing CI drift detection.
+- Release candidates now inspect packed manifests and runtime assets before publish, then verify
+  clean registry installs before creating the GitHub release tag.
 ## [0.2.0] - 2026-05-08
 
 ### Breaking changes
