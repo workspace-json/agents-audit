@@ -1,27 +1,27 @@
 # agents-audit monorepo
 
 **workspace.json** is an open specification for structured AI agent codebase
-intelligence. A machine-generated JSON file at `.agents/agents.workspace.json`
+intelligence. A machine-generated JSON file at `.agents/workspace.json`
 gives AI coding agents structured context about your repository.
 
-**Current version: v0.3** ([spec](./packages/spec/) · [rendered docs](https://workspacejson.dev/spec/) · [changelog](./CHANGELOG.md))
+([spec](./packages/spec/) · [rendered docs](https://workspacejson.dev/spec/) · [changelog](./CHANGELOG.md))
 
 **Shipped consumer integrations:**
-- [`jnuyens/gsd-plugin v2.42.3`](https://github.com/jnuyens/gsd-plugin/releases/tag/v2.42.3) — Claude Code plugin reading `.agents/agents.workspace.json` at SessionStart
+- [Buildomator (formerly gsd-plugin)](https://buildomator.com) — independent Claude Code implementation reading `.agents/workspace.json` at SessionStart
 
 This repository is the canonical source for the agents-audit release family.
 
 ## Packages
 
-| Package | Version | Purpose |
-| --- | --- | --- |
-| [`@workspacejson/spec`](https://www.npmjs.com/package/@workspacejson/spec) | 0.3.0 | JSON Schema and TypeScript types for `agents.workspace.json` |
-| [`@workspacejson/rules`](https://www.npmjs.com/package/@workspacejson/rules) | 0.3.0 | Deterministic parser, scanner, validator, and rule engine |
-| [`agents-audit`](https://www.npmjs.com/package/agents-audit) | 0.3.0 | CLI for scanning `AGENTS.md` hygiene and workspace metadata |
+| Package | Purpose |
+| --- | --- |
+| [`@workspacejson/spec`](https://www.npmjs.com/package/@workspacejson/spec) | JSON Schema and TypeScript types for `workspace.json` |
+| [`@workspacejson/rules`](https://www.npmjs.com/package/@workspacejson/rules) | Deterministic parser, scanner, validator, and rule engine |
+| [`agents-audit`](https://www.npmjs.com/package/agents-audit) | CLI for scanning `AGENTS.md` hygiene and workspace metadata |
 
 ## Spec Source
 
-The canonical v0.3 specification lives at [`packages/spec/`](./packages/spec/).
+The canonical specification lives at [`packages/spec/`](./packages/spec/).
 
 - JSON Schema: [`packages/spec/schema/v1.json`](./packages/spec/schema/v1.json)
 - TypeScript types: [`packages/spec/src/types.ts`](./packages/spec/src/types.ts)
@@ -33,7 +33,7 @@ The canonical v0.3 specification lives at [`packages/spec/`](./packages/spec/).
 # Audit AGENTS.md hygiene in any repo
 npx agents-audit
 
-# Generate agents.workspace.json
+# Generate .agents/workspace.json
 npx agents-audit generate
 ```
 
