@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.4.4] - Unreleased
+
+### Fixed
+
+- Reconciled the strict `@workspacejson/spec` validator with the VR-639/640
+  contract corrections on a single release branch.
+- Added the internal-only `@workspacejson/cli` normalization shim; it is marked
+  `private` and is not part of the public release.
+
 ## [0.4.2] - 2026-07-16
 
 ### Changed
