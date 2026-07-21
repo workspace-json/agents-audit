@@ -18,6 +18,12 @@ gives AI coding agents structured context about your repository.
 
 **Shipped consumer integrations:**
 - [Buildomator (formerly gsd-plugin)](https://buildomator.com) — independent Claude Code implementation reading `.agents/workspace.json` at SessionStart
+- [`@workspacejson/codex-mcp`](https://www.npmjs.com/package/@workspacejson/codex-mcp) — Codex MCP server for consulting repository intelligence before edits
+
+`workspace.json` separates machine-generated topology from human-authored manual
+evidence. Regeneration updates the generated topology while preserving `manual`
+evidence verbatim. See [Billfold](https://www.billfold.tech/) for a production
+workflow built around this distinction.
 
 This repository is the canonical source for the agents-audit release family.
 
