@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.4.4] - Unreleased
+
+### Fixed
+
+- Reconciled the strict packaged-schema validator with the VR-639/640 contract
+  fixes that had diverged across earlier release branches.
+- Documented `generated.fileIndex` keys as repository-root-relative POSIX paths.
+- Typed and documented `generated.coChange[].files` as an unordered two-file set,
+  rather than a positional tuple.
+- Corrected the exported runtime `version` to match the package manifest.
+
+### Compatibility note
+
+- `npx @workspacejson/spec validate <file>` resolves because npm selects this
+  package's sole `workspacejson-spec` bin. This release deliberately does not
+  reserve the generic `spec` bin alias. If a second bin is added in the future,
+  re-evaluate that npm single-bin fallback dependency as part of that change.
+
 ## [0.4.3] - 2026-07-17
 
 ### Patch Changes
