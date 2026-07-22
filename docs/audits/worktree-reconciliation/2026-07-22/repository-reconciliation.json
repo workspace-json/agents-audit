@@ -1,0 +1,187 @@
+{
+  "schemaVersion": "1.0",
+  "auditType": "worktree-linear-reconciliation",
+  "auditDate": "2026-07-22",
+  "readOnly": true,
+  "stateModified": false,
+  "repository": {
+    "name": "agents-audit",
+    "remote": "https://github.com/workspace-json/agents-audit",
+    "root": "/Users/user1/WebstormProjects/agents-audit",
+    "canonicalBranch": "origin/main",
+    "canonicalHead": "5a0e37e",
+    "canonicalHeadFull": "5a0e37e",
+    "canonicalVersions": { "spec": "0.4.3", "agents-audit": "0.4.3", "rules": "0.4.3" },
+    "publishedNpmVersion": "0.4.3 (INFERRED from memory HAC-179 + origin/main; `npm view` blocked by local publish hook, not re-verified)",
+    "requiresPullRequests": true,
+    "protectedBranches": ["main"],
+    "validationCommands": ["pnpm install", "pnpm build", "pnpm typecheck", "pnpm test"],
+    "ciWorkflows": [".github/workflows/ci.yml", ".github/workflows/release.yml"],
+    "linear": {
+      "workspace": "marcelle-labs",
+      "team": "Meta / Agent Infrastructure",
+      "teamId": "e0428892-022d-4662-abf4-1a58bf4bfd6d",
+      "note": "Repo branch prefix 'vr-639-640' does NOT match Linear gitBranchName; VR-639/VR-640 resolve to META-101/META-102 by content."
+    }
+  },
+  "worktrees": [
+    { "id": "WT-primary", "path": "/Users/user1/WebstormProjects/agents-audit", "branch": "feature/vr-639-640-spec-cli-prereqs", "head": "b6c092b", "dirExists": true, "clean": false, "prunable": false, "note": "Primary checkout. Dirty tree = the only copy of the 0.4.4 reconciliation (CHANGELOG split-brain narrative + validator wiring + 2 unique CLI tests).", "disposition": "MANUAL_RECONCILIATION_REQUIRED" },
+    { "id": "WT-bin", "path": "/private/tmp/agents-audit-bin-entrypoint", "branch": "fix/agents-audit-bin-entrypoint", "head": "161cffb", "dirExists": true, "clean": true, "prunable": false, "disposition": "ALREADY_INTEGRATED" },
+    { "id": "WT-npm-access", "path": "/private/tmp/agents-audit-npm-access-command", "branch": "fix/npm-access-command", "head": "e3e076d", "dirExists": false, "clean": null, "prunable": true, "disposition": "ALREADY_INTEGRATED" },
+    { "id": "WT-npm-preflight", "path": "/private/tmp/agents-audit-npm-preflight", "branch": "fix/npm-publish-access", "head": "c3e69f3", "dirExists": false, "clean": null, "prunable": true, "disposition": "ALREADY_INTEGRATED" },
+    { "id": "WT-npm-publisher-preflight", "path": "/private/tmp/agents-audit-npm-publisher-preflight", "branch": "fix/npm-publisher-preflight", "head": "cf8ff0e", "dirExists": false, "clean": null, "prunable": true, "disposition": "ALREADY_INTEGRATED" },
+    { "id": "WT-npm-token", "path": "/private/tmp/agents-audit-npm-token-routing", "branch": "fix/npm-token-routing", "head": "9f5af72", "dirExists": false, "clean": null, "prunable": true, "disposition": "ALREADY_INTEGRATED" },
+    { "id": "WT-readme", "path": "/private/tmp/agents-audit-readme-final", "branch": "docs/readme-clarity-final", "head": "a91ec1d", "dirExists": true, "clean": true, "prunable": false, "disposition": "MERGE_CANDIDATE", "openPr": 18 },
+    { "id": "WT-release-042", "path": "/private/tmp/agents-audit-release-042", "branch": "release/0.4.2", "head": "316e00f", "dirExists": false, "clean": null, "prunable": true, "disposition": "ALREADY_INTEGRATED" },
+    { "id": "WT-release-044", "path": "/private/tmp/agents-audit-release-044", "branch": "release/0.4.4", "head": "3a77e1b", "dirExists": true, "clean": true, "prunable": false, "disposition": "MERGE_CANDIDATE" },
+    { "id": "WT-v3d-ajv", "path": "/private/tmp/agents-audit-v3d-ajv", "branch": "spike/v3d-ajv-validate", "head": "aee5f97", "dirExists": false, "clean": null, "prunable": true, "disposition": "SUPERSEDED" },
+    { "id": "WT-v3d-baseline", "path": "/private/tmp/agents-audit-v3d-baseline", "branch": null, "head": "4ab426e", "detached": true, "dirExists": false, "clean": null, "prunable": true, "disposition": "ABANDON_CANDIDATE", "note": "Detached at 4ab426e (scaffold-cli), reachable from feature/spike/release-0.4.4." },
+    { "id": "WT-hac-181", "path": "/private/tmp/hac-181-prechange", "branch": null, "head": "8acc068", "detached": true, "dirExists": false, "clean": null, "prunable": true, "disposition": "ABANDON_CANDIDATE", "note": "Detached at 8acc068 (=local main / 0.4.1 base), reachable from main." }
+  ],
+  "branches": [
+    { "name": "feature/vr-639-640-spec-cli-prereqs", "head": "b6c092b", "upstream": "none (no origin twin)", "ahead": 4, "behind": 21, "mergeBase": "8acc068", "cherryUnmerged": 4, "lastCommit": "2026-07-16", "uniqueCommits": ["b6c092b", "00bf8a1", "4ab426e", "aca3192"], "linear": ["META-101", "META-102"], "pr": null, "disposition": "MANUAL_RECONCILIATION_REQUIRED", "riskOfLoss": "HIGH", "note": "Based on stale 0.4.1. Committed work largely superseded by release/0.4.4. Value lives in the UNCOMMITTED working tree." },
+    { "name": "release/0.4.4", "head": "3a77e1b", "upstream": "origin/release/0.4.4", "ahead": 4, "behind": 2, "mergeBase": "039773e", "cherryUnmerged": 4, "lastCommit": "2026-07-19", "uniqueCommits": ["3a77e1b", "5ded233", "8dca4e7", "0566ee9"], "linear": ["META-101", "META-102"], "pr": null, "disposition": "MERGE_CANDIDATE", "riskOfLoss": "MEDIUM", "note": "Clean 0.4.4 candidate rebased on current main. The recommended integration vehicle for META-101/102 + @workspacejson/cli + real validator. No PR opened yet." },
+    { "name": "spike/v3d-ajv-validate", "head": "aee5f97", "upstream": "origin/spike/v3d-ajv-validate", "ahead": 3, "behind": 21, "mergeBase": "8acc068", "cherryUnmerged": 3, "lastCommit": "2026-07-16", "uniqueCommits": ["aee5f97", "4ab426e", "aca3192"], "linear": [], "pr": null, "disposition": "SUPERSEDED", "riskOfLoss": "LOW", "note": "AJV validator (aee5f97) was productionized into main via release/0.4.2 (6c1c01a). scaffold-cli/pin-fileIndex duplicated in release/0.4.4." },
+    { "name": "docs/readme-clarity-final", "head": "a91ec1d", "upstream": "origin/docs/readme-clarity-final", "ahead": 1, "behind": 1, "mergeBase": "8e19086", "cherryUnmerged": 1, "lastCommit": "2026-07-22", "uniqueCommits": ["a91ec1d"], "linear": [], "pr": 18, "disposition": "MERGE_CANDIDATE", "riskOfLoss": "LOW", "note": "Open PR #18, MERGEABLE. Follow-up commit on same branch as merged PR #17." },
+    { "name": "codex-root-workspace-json", "head": "5e35adc", "upstream": "origin/codex-root-workspace-json", "ahead": 1, "behind": 54, "mergeBase": "019257a", "cherryUnmerged": 0, "lastCommit": "2026-05-08", "linear": [], "pr": null, "disposition": "ALREADY_INTEGRATED", "riskOfLoss": "LOW", "note": "cherry=0: its single commit is patch-present in main." },
+    { "name": "fix/ci-pnpm-version", "head": "358b72a", "upstream": "origin/main", "ahead": 0, "behind": 37, "cherryUnmerged": 0, "lastCommit": "2026-05-13", "pr": 2, "disposition": "ALREADY_INTEGRATED", "riskOfLoss": "LOW" },
+    { "name": "fix/agents-audit-bin-entrypoint", "head": "161cffb", "ahead": 0, "behind": 5, "cherryUnmerged": 0, "pr": 15, "disposition": "ALREADY_INTEGRATED", "riskOfLoss": "LOW" },
+    { "name": "fix/npm-access-command", "head": "e3e076d", "ahead": 0, "behind": 9, "cherryUnmerged": 0, "pr": 13, "disposition": "ALREADY_INTEGRATED", "riskOfLoss": "LOW" },
+    { "name": "fix/npm-publish-access", "head": "c3e69f3", "ahead": 0, "behind": 13, "cherryUnmerged": 0, "pr": 11, "disposition": "ALREADY_INTEGRATED", "riskOfLoss": "LOW" },
+    { "name": "fix/npm-publisher-preflight", "head": "cf8ff0e", "ahead": 0, "behind": 7, "cherryUnmerged": 0, "pr": 14, "disposition": "ALREADY_INTEGRATED", "riskOfLoss": "LOW" },
+    { "name": "fix/npm-token-routing", "head": "9f5af72", "ahead": 0, "behind": 11, "cherryUnmerged": 0, "pr": 12, "disposition": "ALREADY_INTEGRATED", "riskOfLoss": "LOW" },
+    { "name": "release/0.4.2", "head": "316e00f", "ahead": 0, "behind": 15, "cherryUnmerged": 0, "pr": 10, "disposition": "ALREADY_INTEGRATED", "riskOfLoss": "LOW" },
+    { "name": "release/v0.3", "head": "ef5814f", "ahead": 1, "behind": 39, "mergeBase": "1ea94ee", "cherryUnmerged": 0, "pr": 1, "disposition": "ALREADY_INTEGRATED", "riskOfLoss": "LOW" },
+    { "name": "main (local)", "head": "8acc068", "upstream": "origin/main", "ahead": 0, "behind": 21, "cherryUnmerged": 0, "lastCommit": "2026-06-02", "disposition": "REBASE_OR_REFRESH_CANDIDATE", "riskOfLoss": "NONE", "note": "Stale local tracking branch (0.4.1). Fast-forward to origin/main. No unique work." },
+    { "name": "origin/fix/verify-published-registry-propagation-retry", "head": "4738067", "remoteOnly": true, "pr": 16, "disposition": "ALREADY_INTEGRATED", "riskOfLoss": "LOW" }
+  ],
+  "stashes": { "count": 0, "note": "git stash list empty. However, dangling stash-shaped commits exist unreachable (see danglingCommits)." },
+  "danglingCommits": [
+    { "commit": "2e415d9", "date": "2026-07-17", "subject": "index on feature/vr-639-640-spec-cli-prereqs: b6c092b", "disposition": "PRESERVE_PENDING_DECISION", "note": "Dropped-stash index snapshot; likely superseded by current working tree." },
+    { "commit": "774312d", "date": "2026-07-19", "subject": "WIP on feature/vr-639-640-spec-cli-prereqs: b6c092b", "disposition": "PRESERVE_PENDING_DECISION" },
+    { "commit": "bce546f", "date": "2026-07-19", "subject": "index on feature/vr-639-640-spec-cli-prereqs: b6c092b", "disposition": "PRESERVE_PENDING_DECISION" },
+    { "commit": "c300586", "date": "2026-07-16", "subject": "WIP on feature/vr-639-640-spec-cli-prereqs: 00bf8a1", "disposition": "PRESERVE_PENDING_DECISION" },
+    { "commit": "(11 more, May 2026, on main/gsd-reviewfix)", "disposition": "ABANDON_CANDIDATE", "note": "Old dropped stashes, all on already-merged May history." }
+  ],
+  "uncommittedChanges": {
+    "surface": "WT-primary working tree (feature/vr-639-640-spec-cli-prereqs)",
+    "trackedModified": 15,
+    "untracked": ["packages/spec/src/validator.ts", "claudedocs/"],
+    "onlyCopy": true,
+    "riskOfLoss": "HIGH",
+    "uniqueContentNotInRelease_044": [
+      "packages/spec/CHANGELOG.md — [0.4.4] split-brain incident narrative (documents VR-639/VR-640 + 0.4.2/0.4.3 divergence)",
+      "packages/agents-audit/src/cli.integration.test.ts — 2 tests: (a) --check + --dry-run drift gate still fails; (b) --force surfaces relocated invalid file"
+    ],
+    "supersededByRelease_044": [
+      "packages/spec/src/index.ts validator wiring (release/0.4.4 has a cleaner variant + extra schema annotation)",
+      "packages/spec/src/types.ts set semantics (identical in both)",
+      "packages/spec/src/validator.ts (byte-identical to origin/main + release/0.4.4)",
+      "packages/cli scaffold (patch-identical 4ab426e == 8dca4e7)"
+    ],
+    "note": "Untracked validator.ts is byte-identical to origin/main's tracked copy; the feature branch simply never had it committed on its stale base."
+  },
+  "pullRequests": [
+    { "number": 18, "state": "OPEN", "head": "docs/readme-clarity-final", "base": "main", "mergeable": "MERGEABLE", "disposition": "MERGE_CANDIDATE" },
+    { "number": 17, "state": "MERGED", "head": "docs/readme-clarity-final", "base": "main" },
+    { "number": 16, "state": "MERGED", "head": "fix/verify-published-registry-propagation-retry" },
+    { "number": 15, "state": "MERGED", "head": "fix/agents-audit-bin-entrypoint" },
+    { "number": 14, "state": "MERGED", "head": "fix/npm-publisher-preflight" },
+    { "number": 13, "state": "MERGED", "head": "fix/npm-access-command" },
+    { "number": 12, "state": "MERGED", "head": "fix/npm-token-routing" },
+    { "number": 11, "state": "MERGED", "head": "fix/npm-publish-access" },
+    { "number": 10, "state": "MERGED", "head": "release/0.4.2" },
+    { "number": 2, "state": "MERGED", "head": "fix/ci-pnpm-version" },
+    { "number": 1, "state": "MERGED", "head": "release/v0.3" }
+  ],
+  "linearMappings": [
+    {
+      "issue": "META-101", "alias": "VR-639", "title": "coChange.files tuple vs set — reconcile before CLI",
+      "linearState": "Done", "priority": "Urgent",
+      "observedImplementationState": "IMPLEMENTED_UNVERIFIED_NOT_INTEGRATED",
+      "evidence": "Set semantics (files: string[] + doc invariant) present on feature/vr-639-640, spike, release/0.4.4. ABSENT on origin/main (0.4.3) — `git show origin/main:packages/spec/src/types.ts` line 94 still `files: [string, string]`.",
+      "linearAccuracy": "OVERSTATES — Done but the fix is not on the canonical/published branch.",
+      "proposedUpdate": "Add comment (do NOT change status without human): 'Fix implemented on branch but not merged to main; origin/main 0.4.3 still ships the tuple. Ships with release/0.4.4.' Decide Done-semantics per META-31.",
+      "humanGate": true
+    },
+    {
+      "issue": "META-102", "alias": "VR-640", "title": "fileIndex key format — pin to repo-root-relative POSIX",
+      "linearState": "Done", "priority": "Urgent",
+      "observedImplementationState": "IMPLEMENTED_UNVERIFIED_NOT_INTEGRATED",
+      "evidence": "Anchor string present (2x) in schema/v1.json on feature/spike/release-0.4.4. ABSENT on origin/main (0 matches for 'repository-root-relative').",
+      "linearAccuracy": "OVERSTATES — Done but not on canonical/published branch.",
+      "proposedUpdate": "Same as META-101. Ships with release/0.4.4.",
+      "humanGate": true
+    },
+    {
+      "issue": "META-97", "title": "Branch/worktree census — inventory only, zero dispositions",
+      "linearState": "Backlog", "priority": "High",
+      "observedImplementationState": "PARTIAL",
+      "evidence": "This audit is the census META-97 anchors (though this pass also proposes dispositions, exceeding META-97's inventory-only scope).",
+      "proposedUpdate": "Comment linking docs/audits/worktree-reconciliation/2026-07-22/. Human decides whether this satisfies META-97 or feeds it.",
+      "humanGate": true
+    },
+    {
+      "issue": "META-31", "title": "Linear Releases pipeline — Merged-on-merge, Done-on-release",
+      "linearState": "Backlog", "priority": "High",
+      "observedImplementationState": "REFERENCE",
+      "evidence": "Root cause of the META-101/102 'Done but unshipped' ambiguity. Until this lands, 'Done' does not mean released.",
+      "proposedUpdate": "No change. Cited as context.",
+      "humanGate": false
+    },
+    {
+      "issue": "(none) @workspacejson/cli", "title": "dbt→workspace.json path-normalization shim",
+      "linearState": "no matching issue found in repo scan (references vreko#491 / HAC-75 as downstream CLI-scaffold home)",
+      "observedImplementationState": "ORPHAN_IMPLEMENTATION / IMPLEMENTED_UNVERIFIED",
+      "evidence": "packages/cli exists on feature/spike/release-0.4.4; ABSENT on origin/main. Ships with release/0.4.4.",
+      "proposedUpdate": "Confirm the owning CLI-scaffold issue (HAC-75/vreko#491). If none tracks the shim publish, create one.",
+      "humanGate": true
+    }
+  ],
+  "duplicatePatchRelationships": [
+    { "kind": "IDENTICAL_PATCH", "patchId": "e1b4588", "commits": ["4ab426e (feature)", "8dca4e7 (release/0.4.4)", "4ab426e (spike)"], "subject": "scaffold @workspacejson/cli", "integrated": false },
+    { "kind": "DIVERGED_SAME_MESSAGE", "commits": ["b6c092b (feature, pid 725deb2)", "0be09a1 (release/0.4.2 → MERGED to main, pid 7fc421a)"], "subject": "make workspace generation producer-conformant", "note": "Feature-branch flavor differs from the flavor merged via 0.4.2." },
+    { "kind": "DIVERGED_SAME_MESSAGE", "commits": ["aca3192 (feature/spike, pid 95075cb)", "0566ee9 (release/0.4.4, pid 751cdaa)"], "subject": "pin fileIndex key format" },
+    { "kind": "DIVERGED_SAME_MESSAGE", "commits": ["aee5f97 (spike, pid 19bc1b2)", "ff02337 (release/0.4.2 → MERGED, pid 4252a38)"], "subject": "validate against packaged schema", "note": "Spike superseded by productionized 6c1c01a on main." }
+  ],
+  "dependencies": [
+    { "from": "release/0.4.4", "requires": "origin/main refresh (behind 2)", "type": "rebase-before-merge" },
+    { "from": "release/0.4.4", "requires": "port 2 unique CLI tests + CHANGELOG narrative from WT-primary working tree", "type": "content-preservation", "critical": true },
+    { "from": "META-101/102 status finalization", "requires": "release/0.4.4 merged + published", "type": "linear-after-integration" },
+    { "from": "feature/vr-639-640 teardown", "requires": "unique working-tree content ported into release/0.4.4 line", "type": "preservation-before-cleanup", "critical": true },
+    { "from": "spike/v3d-ajv-validate teardown", "requires": "release/0.4.4 merged", "type": "preservation-before-cleanup" }
+  ],
+  "proposedMergeOrder": [
+    { "wave": 0, "title": "Preservation & prerequisites", "tasks": ["Snapshot WT-primary uncommitted tree to a preservation branch/patch/tag", "Archive-tag spike/v3d-ajv-validate", "Confirm release/0.4.4 clean & pushed"], "parallelizable": true },
+    { "wave": 1, "title": "Foundational integration", "tasks": ["Refresh release/0.4.4 from origin/main", "Port WT-primary's 2 unique CLI tests + CHANGELOG narrative into release/0.4.4", "Open PR release/0.4.4 → main", "Pass CI (build/typecheck/test)", "Merge"] },
+    { "wave": 2, "title": "Dependent integration", "tasks": ["Merge docs PR #18", "Publish 0.4.4 via Release workflow (fixed-group)"] },
+    { "wave": 3, "title": "Validation & Linear reconciliation", "tasks": ["Verify published 0.4.4 carries META-101/102 fixes + @workspacejson/cli", "Update META-101/102 to released", "Confirm/close CLI shim issue", "Comment META-97 with this report"] },
+    { "wave": 4, "title": "Cleanup", "tasks": ["git worktree prune", "Delete integrated local branches after archive tags", "Retire spike + feature/vr-639-640 after preservation", "Prune old May dangling stashes"] }
+  ],
+  "proposedLinearUpdates": [
+    { "issue": "META-101", "action": "comment", "statusChange": "hold-for-human", "body": "Reconciliation audit 2026-07-22: the coChange.files set-semantics fix is present on feature/vr-639-640-spec-cli-prereqs, spike/v3d-ajv-validate, and release/0.4.4, but is NOT on origin/main (0.4.3 still ships `files: [string, string]` in types.ts). Marked Done on 2026-07-12 but never integrated to the canonical/published branch. Ships with release/0.4.4 (unmerged, no PR). Recommend keeping Done only if 'Done' means merged-to-branch; otherwise reopen until 0.4.4 publishes (see META-31)." },
+    { "issue": "META-102", "action": "comment", "statusChange": "hold-for-human", "body": "Reconciliation audit 2026-07-22: the fileIndex repo-root-relative POSIX anchor is present on feature/spike/release-0.4.4 but absent from origin/main (0 matches for 'repository-root-relative' in schema/v1.json at 0.4.3). Done 2026-07-12 but not integrated/published. Ships with release/0.4.4." },
+    { "issue": "META-97", "action": "comment", "statusChange": "none", "body": "Branch/worktree census delivered at docs/audits/worktree-reconciliation/2026-07-22/. 12 worktrees (3 live, 8 prunable, 1 primary-dirty), 14 local branches (4 with unique unmerged work: feature/vr-639-640, release/0.4.4, spike/v3d-ajv-validate, docs/readme-clarity-final). Zero repo/Linear mutations." }
+  ],
+  "cleanupCandidates": [
+    { "target": "prunable worktree admin entries (8)", "safeAfter": "git worktree prune", "command": "git worktree prune -v", "blocking": "none — dirs already gone, branches retained" },
+    { "target": "local branches: fix/npm-*, fix/agents-audit-bin-entrypoint, fix/ci-pnpm-version, release/0.4.2, release/v0.3, codex-root-workspace-json", "safeAfter": "confirm cherry=0 (done) + optional archive tag", "command": "git branch -d <branch> (only after tag/bundle)", "blocking": "archive tag recommended" },
+    { "target": "spike/v3d-ajv-validate", "safeAfter": "release/0.4.4 merged + archive tag", "blocking": "release/0.4.4 integration" },
+    { "target": "feature/vr-639-640-spec-cli-prereqs", "safeAfter": "unique working-tree content ported to release/0.4.4 line + preservation snapshot", "blocking": "CRITICAL — holds the only copy of uncommitted reconciliation" },
+    { "target": "old May 2026 dangling stashes (11)", "safeAfter": "confirm superseded (all on merged history)", "command": "git reflog expire / gc (implicit)", "blocking": "none" }
+  ],
+  "unknowns": [
+    "Live npm published versions — `npm view` blocked by local architecture-fence hook; 0.4.3 INFERRED from memory + origin/main.",
+    "Whether release/0.4.4 local == origin/release/0.4.4 (branch -vv shows tracking; not byte-verified).",
+    "Whether a dedicated Linear issue tracks the split-brain incident / 0.4.4 publish, or whether META-101's honest-correction section is the record of it.",
+    "The owning Linear issue for the @workspacejson/cli shim publish (references vreko#491 / HAC-75, not directly fetched this pass).",
+    "Content of the 4 recent dangling feature-branch stashes vs current working tree (not diffed)."
+  ],
+  "humanApprovalGates": [
+    "G1: Ratify release/0.4.4 (not feature/vr-639-640) as the blessed 0.4.4 integration vehicle.",
+    "G2: Confirm the 2 unique CLI tests + CHANGELOG narrative must be ported before feature branch teardown.",
+    "G3: Decide META-101/102 status semantics (keep Done vs reopen-until-released).",
+    "G4: Confirm fixed-group version bump (feature tree bumps only spec→0.4.4; release/0.4.4 bumps all packages→0.4.4).",
+    "G5: Authorize any branch/worktree deletion (none performed in this pass)."
+  ]
+}
