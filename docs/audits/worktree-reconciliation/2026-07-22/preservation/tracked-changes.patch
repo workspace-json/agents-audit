@@ -1,0 +1,468 @@
+diff --git a/packages/agents-audit/package.json b/packages/agents-audit/package.json
+index 32d57dd..ab0f089 100644
+--- a/packages/agents-audit/package.json
++++ b/packages/agents-audit/package.json
+@@ -66,7 +66,7 @@
+   },
+   "dependencies": {
+     "@workspacejson/rules": "workspace:*",
+-    "@workspacejson/spec": "0.4.1",
++    "@workspacejson/spec": "workspace:*",
+     "@inquirer/core": "^9.0.0",
+     "boxen": "^7.1.1",
+     "cli-table3": "^0.6.5",
+diff --git a/packages/agents-audit/src/cli.integration.test.ts b/packages/agents-audit/src/cli.integration.test.ts
+index 5487bae..ad78450 100644
+--- a/packages/agents-audit/src/cli.integration.test.ts
++++ b/packages/agents-audit/src/cli.integration.test.ts
+@@ -111,6 +111,50 @@ describe('CLI integration', () => {
+     logSpy.mockRestore();
+   });
+ 
++  it('still fails the drift gate when --check is combined with --dry-run', async () => {
++    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
++    const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
++    mocks.generateWorkspaceJson.mockResolvedValueOnce({
++      path: '/repo/.agents/workspace.json',
++      written: false,
++      skipped: false,
++      drift: true,
++      preservedManual: true,
++      content: { staged: true },
++    });
++
++    const exitCode = await runCli(['node', 'agents-audit', 'generate', '/repo', '--check', '--dry-run']);
++
++    expect(exitCode).toBe(1);
++    const errorCalls = (errorSpy as unknown as { mock: { calls: unknown[][] } }).mock.calls;
++    expect(errorCalls.flat().join(' ')).toContain('manual evidence is untouched');
++    expect(logSpy).toHaveBeenCalledWith(JSON.stringify({ staged: true }, null, 2));
++    errorSpy.mockRestore();
++    logSpy.mockRestore();
++  });
++
++  it('surfaces the relocated invalid file when --force recovers a fresh generate', async () => {
++    const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
++    mocks.generateWorkspaceJson.mockResolvedValueOnce({
++      path: '/repo/.agents/workspace.json',
++      written: true,
++      skipped: false,
++      drift: true,
++      preservedManual: false,
++      invalidFileMoved: '/repo/.agents/workspace.json.invalid.2026-01-01T00-00-00-000Z',
++      content: {},
++    });
++
++    const exitCode = await runCli(['node', 'agents-audit', 'generate', '/repo', '--force']);
++
++    expect(exitCode).toBe(0);
++    const logCalls = (logSpy as unknown as { mock: { calls: unknown[][] } }).mock.calls;
++    const logs = logCalls.flat().join(' ');
++    expect(logs).toContain('Generated /repo/.agents/workspace.json');
++    expect(logs).toContain('/repo/.agents/workspace.json.invalid.2026-01-01T00-00-00-000Z');
++    logSpy.mockRestore();
++  });
++
+   it('treats --dir as an invalid option', async () => {
+     const exitCode = await runCli(['node', 'agents-audit', 'scan', '--dir', '/tmp/example']);
+ 
+diff --git a/packages/agents-audit/src/cli.ts b/packages/agents-audit/src/cli.ts
+index 477e5de..f2d875d 100644
+--- a/packages/agents-audit/src/cli.ts
++++ b/packages/agents-audit/src/cli.ts
+@@ -109,17 +109,24 @@ export async function runCli(argv: string[] = process.argv): Promise<number> {
+         });
+         spinner.stop();
+ 
+-        if (options.dryRun) {
+-          console.log(JSON.stringify(result.content, null, 2));
+-        } else if (options.check) {
++        if (options.check) {
+           if (result.drift) {
+             console.error(`Generated sections are stale at ${result.path}; manual evidence is untouched. Run: agents-audit generate ${path}`);
+             exitCode = 1;
+           } else {
+             console.log(`Generated sections are current at ${result.path}`);
+           }
++          if (options.dryRun) {
++            console.log(JSON.stringify(result.content, null, 2));
++          }
++        } else if (options.dryRun) {
++          console.log(JSON.stringify(result.content, null, 2));
+         } else if (result.skipped) {
+           console.log(`Generated sections already current at ${result.path}; manual evidence preserved`);
++        } else if (result.invalidFileMoved) {
++          console.log(`Generated ${result.path}`);
++          console.log(pc.yellow(`  Previous file was invalid and has been moved aside: ${result.invalidFileMoved}`));
++          console.log(pc.yellow('  Manual evidence from the previous file was not recovered (it could not be parsed/validated).'));
+         } else {
+           console.log(`Generated ${result.path}`);
+         }
+diff --git a/packages/agents-audit/src/package-metadata.test.ts b/packages/agents-audit/src/package-metadata.test.ts
+index 104b4cb..bae8395 100644
+--- a/packages/agents-audit/src/package-metadata.test.ts
++++ b/packages/agents-audit/src/package-metadata.test.ts
+@@ -12,7 +12,7 @@ describe('package metadata', () => {
+   it('keeps the spec package mature and discoverable', () => {
+     const pkg = readPackageJson('packages/spec/package.json');
+     expect(pkg.name).toBe('@workspacejson/spec');
+-    expect(pkg.version).toBe('0.4.2');
++    expect(pkg.version).toBe('0.4.4');
+     expect((pkg.repository as { directory?: string } | undefined)?.directory).toBe('packages/spec');
+     expect((pkg.bin as { [key: string]: string } | undefined)?.['workspacejson-spec']).toBe('./dist/cli.js');
+     expect((pkg.publishConfig as { access?: string } | undefined)?.access).toBe('public');
+diff --git a/packages/cli/package.json b/packages/cli/package.json
+index abcd8aa..c471455 100644
+--- a/packages/cli/package.json
++++ b/packages/cli/package.json
+@@ -43,7 +43,7 @@
+     "typecheck": "tsc --noEmit"
+   },
+   "dependencies": {
+-    "@workspacejson/spec": "0.4.1"
++    "@workspacejson/spec": "workspace:*"
+   },
+   "devDependencies": {
+     "typescript": "^5.4.0",
+diff --git a/packages/cli/src/cli.ts b/packages/cli/src/cli.ts
+index 4a78a05..15eb267 100644
+--- a/packages/cli/src/cli.ts
++++ b/packages/cli/src/cli.ts
+@@ -1,6 +1,7 @@
+ #!/usr/bin/env node
+ import { readFileSync } from "node:fs";
+ import { dirname, resolve } from "node:path";
++import { fileURLToPath } from "node:url";
+ 
+ import { extractModels, findDbtProjects, type DbtManifest } from "./dbt.js";
+ import { computeProjectPrefix, canonical } from "./normalize.js";
+@@ -66,4 +67,6 @@ export function run(args: Args): number {
+   return result.total > 0 && result.matched === 0 ? 1 : 0;
+ }
+ 
+-process.exit(run(parseArgs(process.argv.slice(2))));
++if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
++  process.exit(run(parseArgs(process.argv.slice(2))));
++}
+diff --git a/packages/cli/src/join.ts b/packages/cli/src/join.ts
+index 63a3169..412692b 100644
+--- a/packages/cli/src/join.ts
++++ b/packages/cli/src/join.ts
+@@ -1,3 +1,5 @@
++import type { FileIndexEntry } from "@workspacejson/spec";
++
+ import { normalizeModelPath } from "./normalize.js";
+ 
+ /** A dbt model as read from manifest.json. */
+@@ -9,10 +11,10 @@ export interface DbtModel {
+ 
+ /**
+  * workspace.json behavioral intelligence, keyed by repository-root-relative
+- * POSIX path (per @workspacejson/spec fileIndex, VR-640). Values are opaque
+- * here — the join only needs key presence.
++ * POSIX path (per @workspacejson/spec fileIndex, VR-640). Values follow the
++ * spec's own FileIndexEntry contract — the join only needs key presence.
+  */
+-export type FileIndex = Record<string, unknown>;
++export type FileIndex = Record<string, FileIndexEntry>;
+ 
+ export interface JoinRow {
+   uniqueId: string;
+diff --git a/packages/rules/package.json b/packages/rules/package.json
+index f6738ad..15848f3 100644
+--- a/packages/rules/package.json
++++ b/packages/rules/package.json
+@@ -61,7 +61,7 @@
+     "typecheck": "tsc --noEmit"
+   },
+   "dependencies": {
+-    "@workspacejson/spec": "0.4.1",
++    "@workspacejson/spec": "workspace:*",
+     "ajv": "^8.16.0",
+     "dedent": "^1.5.3",
+     "fast-glob": "^3.3.2",
+diff --git a/packages/spec/CHANGELOG.md b/packages/spec/CHANGELOG.md
+index 83efa7c..62787b2 100644
+--- a/packages/spec/CHANGELOG.md
++++ b/packages/spec/CHANGELOG.md
+@@ -2,7 +2,45 @@
+ 
+ All notable changes to `@workspacejson/spec` are documented here.
+ 
+-## [0.4.2] - 2026-07-16
++## [0.4.4] - Unreleased
++
++Built on top of 0.4.3. Note: a branch-divergence incident meant 0.4.2/0.4.3 were
++published from `spike/v3d-ajv-validate` (the real AJV validator below) while this
++branch independently carried the VR-639/640 fixes below without that validator —
++neither branch alone was sufficient. This release reconciles both. See the incident
++ticket for the full account.
++
++### Fixed
++- `coChange.files` documented and typed as an unordered pair (`string[]`, set semantics)
++  instead of a positional tuple (`[string, string]`) in `types.ts`. The schema already
++  constrained it to exactly two entries; `types.ts` was the split-brain source (VR-639).
++- `fileIndex` key format pinned to "repository-root-relative POSIX path (forward
++  slashes, no leading `./`, no drive letters)" in both schema mirrors, replacing the
++  unanchored "relative path" wording that caused a silent zero-row DataHub join (VR-640).
++  `fragility.file` carries the same anchor.
++- `@workspacejson/spec` dependency pin corrected from a fixed version string to
++  `workspace:*` in `agents-audit`, `rules`, and `cli`, so those packages build and test
++  against this package's own source rather than a stale published version.
++
++### Added
++- `@workspacejson/cli` (`workspacejson-cli`): a dbt-manifest-to-workspace.json join
++  shim. Computes `projectPrefix = relative(gitRoot, dbtProjectDir)` and normalizes
++  `original_file_path` to the canonical `fileIndex` key format above.
++
++## [0.4.3] - 2026-07-17
++
++### Fixed
++- The `agents-audit` CLI entry-point guard so it fires when invoked through npm's
++  `.bin` symlink (`npx agents-audit`, `npm exec agents-audit`). The guard previously
++  compared `resolve(process.argv[1])` against the resolved module URL, which never
++  matched through a symlink — every subcommand (`generate`, `scan`) silently no-op'd
++  and exited 0 instead of running. It now compares real paths via `realpathSync`.
++- Hardened `scripts/verify-package-tarball.mjs` for `agents-audit`: after packing and
++  installing the tarball fresh, it now runs `npx agents-audit generate` and asserts
++  `.agents/workspace.json` actually exists and parses, rather than trusting a clean
++  exit code.
++
++## [0.4.2] - 2026-07-17
+ 
+ ### Added
+ - `workspacejson-spec validate <file>` command, exposed through `npx @workspacejson/spec`.
+@@ -16,8 +54,8 @@ All notable changes to `@workspacejson/spec` are documented here.
+ - Packaged schema annotations now use the current Buildomator implementation name.
+ - `validateV4()` now follows the JSON Schema's v0.4 contract and requires only the v0.4
+   `specVersion`; `coChange` and `fragility` remain optional schema fields.
+-- Package repository and issue metadata now point to the canonical `workspace-json/agents-audit`
+-  repository and `packages/spec` directory.
++- Package tarball verification now requires the runtime schema and concrete fixed-group
++  dependency versions before publish.
+ 
+ ## [0.4.1] - 2026-06-02
+ 
+diff --git a/packages/spec/README.md b/packages/spec/README.md
+index ea4d049..c77b862 100644
+--- a/packages/spec/README.md
++++ b/packages/spec/README.md
+@@ -169,7 +169,11 @@ v0.3 documents remain valid — v0.4 is an additive extension.
+ }
+ ```
+ 
+-Check `generated.specVersion === "0.4"` or use `validateV4(doc)` before accessing these fields.
++Check `generated.specVersion === "0.4"` or use `validateV4(doc)` to confirm the document
++is a valid v0.4 workspace.json before reading `generated`. Note that `coChange` and
++`fragility` are optional even on v0.4 documents — `validateV4(doc)` passing does not
++guarantee either array is present, so still guard with `Array.isArray(doc.generated.coChange)`
++before iterating.
+ 
+ ## Migration from v0.1/v0.2
+ 
+diff --git a/packages/spec/package.json b/packages/spec/package.json
+index ba0fb74..cce0c99 100644
+--- a/packages/spec/package.json
++++ b/packages/spec/package.json
+@@ -1,6 +1,6 @@
+ {
+   "name": "@workspacejson/spec",
+-  "version": "0.4.2",
++  "version": "0.4.4",
+   "description": "JSON Schema and TypeScript types for workspace.json",
+   "license": "Apache-2.0",
+   "author": "workspace-json contributors",
+@@ -61,6 +61,9 @@
+     "test": "npm run build && vitest run",
+     "typecheck": "tsc --noEmit"
+   },
++  "dependencies": {
++    "ajv": "^8.20.0"
++  },
+   "devDependencies": {
+     "json-schema-to-typescript": "^14.0.0",
+     "typescript": "^5.4.0",
+diff --git a/packages/spec/src/index.test.ts b/packages/spec/src/index.test.ts
+index 2627b2a..92c3ac7 100644
+--- a/packages/spec/src/index.test.ts
++++ b/packages/spec/src/index.test.ts
+@@ -3,6 +3,7 @@ import { dirname, resolve } from 'node:path';
+ import { fileURLToPath } from 'node:url';
+ import { describe, expect, it } from 'vitest';
+ import { validate, validateLegacy, validateV4, version, workspaceJsonSchema } from './index.js';
++import { compileSchemaValidator } from './validator.js';
+ import type { CoChangeEntry } from './index.js';
+ 
+ const __dirname = dirname(fileURLToPath(import.meta.url));
+@@ -30,8 +31,22 @@ describe('@workspacejson/spec smoke test', () => {
+ });
+ 
+ describe('version', () => {
+-  it('is 0.4.2', () => {
+-    expect(version).toBe('0.4.2');
++  it('is 0.4.4', () => {
++    expect(version).toBe('0.4.4');
++  });
++});
++
++describe('draft-2020-12 validator', () => {
++  it('enforces prefixItems, which draft-07 does not define', () => {
++    const validateTuple = compileSchemaValidator<readonly [string, ...unknown[]]>({
++      $schema: 'https://json-schema.org/draft/2020-12/schema',
++      type: 'array',
++      prefixItems: [{ type: 'string' }],
++      items: {},
++    });
++
++    expect(validateTuple([42])).toBe(false);
++    expect(validateTuple(['valid', 42])).toBe(true);
+   });
+ });
+ 
+@@ -56,6 +71,19 @@ describe('validate()', () => {
+     const bad = { ...minimalV3, generated: { ...minimalV3.generated, specVersion: '0.2' } };
+     expect(validate(bad)).toBe(false);
+   });
++
++  it('rejects a shallowly plausible document that violates the packaged schema', () => {
++    const missingRequiredGenerator = {
++      ...minimalV3,
++      generated: { specVersion: '0.4', generatedAt: '2026-06-01T00:00:00Z' },
++    };
++
++    expect(validate(missingRequiredGenerator)).toBe(false);
++  });
++
++  it('rejects additional root properties forbidden by the packaged schema', () => {
++    expect(validate({ ...minimalV3, unsupported: true })).toBe(false);
++  });
+ });
+ 
+ describe('validateLegacy()', () => {
+diff --git a/packages/spec/src/index.ts b/packages/spec/src/index.ts
+index 4f6be0d..5d26fc6 100644
+--- a/packages/spec/src/index.ts
++++ b/packages/spec/src/index.ts
+@@ -1,3 +1,8 @@
++import { readFileSync } from 'node:fs';
++import { fileURLToPath } from 'node:url';
++
++import { compileSchemaValidator } from './validator.js';
++
+ export { workspaceJsonSchema } from './schema.js';
+ export type {
+   WorkspaceJson,
+@@ -17,17 +22,21 @@ export type {
+ 
+ import type { WorkspaceJsonV3, WorkspaceJsonV4 } from './types.js';
+ 
+-export const version = '0.4.2';
++type WorkspaceJsonDocument = WorkspaceJsonV3 | WorkspaceJsonV4;
++
++// The runtime validator consumes the schema artifact that is published with
++// the package, rather than the authoring-time TypeScript mirror, so a build
++// that forgets to regenerate schema/v1.json fails validation instead of
++// silently drifting from it.
++const packagedSchema = JSON.parse(
++  readFileSync(fileURLToPath(new URL('../schema/v1.json', import.meta.url)), 'utf8'),
++) as object;
++const validateSchema = compileSchemaValidator<WorkspaceJsonDocument>(packagedSchema);
++
++export const version = '0.4.4';
+ 
+ export function validate(data: unknown): data is WorkspaceJsonV3 | WorkspaceJsonV4 {
+-  if (typeof data !== 'object' || data === null) return false;
+-  const d = data as Record<string, unknown>;
+-  if (!('manual' in d && 'generated' in d && 'agents' in d && 'health' in d)) return false;
+-  const gen = d['generated'];
+-  if (typeof gen !== 'object' || gen === null) return false;
+-  const g = gen as Record<string, unknown>;
+-  return (g['specVersion'] === '0.3' || g['specVersion'] === '0.4') &&
+-    typeof g['generatedAt'] === 'string';
++  return validateSchema(data);
+ }
+ 
+ export function validateV4(data: unknown): data is WorkspaceJsonV4 {
+diff --git a/pnpm-lock.yaml b/pnpm-lock.yaml
+index 5ebe0e3..1959183 100644
+--- a/pnpm-lock.yaml
++++ b/pnpm-lock.yaml
+@@ -34,8 +34,8 @@ importers:
+         specifier: workspace:*
+         version: link:../rules
+       '@workspacejson/spec':
+-        specifier: 0.4.1
+-        version: 0.4.1
++        specifier: workspace:*
++        version: link:../spec
+       boxen:
+         specifier: ^7.1.1
+         version: 7.1.1
+@@ -71,8 +71,8 @@ importers:
+   packages/cli:
+     dependencies:
+       '@workspacejson/spec':
+-        specifier: 0.4.1
+-        version: 0.4.1
++        specifier: workspace:*
++        version: link:../spec
+     devDependencies:
+       tsup:
+         specifier: ^8.0.0
+@@ -87,8 +87,8 @@ importers:
+   packages/rules:
+     dependencies:
+       '@workspacejson/spec':
+-        specifier: 0.4.1
+-        version: 0.4.1
++        specifier: workspace:*
++        version: link:../spec
+       ajv:
+         specifier: ^8.16.0
+         version: 8.20.0
+@@ -128,6 +128,10 @@ importers:
+         version: 1.6.1(@types/node@22.19.17)
+ 
+   packages/spec:
++    dependencies:
++      ajv:
++        specifier: ^8.20.0
++        version: 8.20.0
+     devDependencies:
+       json-schema-to-typescript:
+         specifier: ^14.0.0
+@@ -757,10 +761,6 @@ packages:
+   '@vitest/utils@1.6.1':
+     resolution: {integrity: sha512-jOrrUvXM4Av9ZWiG1EajNto0u96kWAhJ1LmPmJhXXQx/32MecEKd10pOLYgS2BQx1TgkGhloPU1ArDW2vvaY6g==}
+ 
+-  '@workspacejson/spec@0.4.1':
+-    resolution: {integrity: sha512-urLGyab4/KfY9xgSkYVhqv8eUmczSdOxn7Um0OGZT1+g9j+mGMjDClsB1bmQMCsisaunWnlkrA7SURS3odKlDg==}
+-    engines: {node: '>=20.0.0'}
+-
+   acorn-walk@8.3.5:
+     resolution: {integrity: sha512-HEHNfbars9v4pgpW6SO1KSPkfoS0xVOM/9UzkJltjlsHZmJasxg8aXkuZa7SMf8vKGIBhpUsPluQSqhJFCqebw==}
+     engines: {node: '>=0.4.0'}
+@@ -2484,8 +2484,6 @@ snapshots:
+       loupe: 2.3.7
+       pretty-format: 29.7.0
+ 
+-  '@workspacejson/spec@0.4.1': {}
+-
+   acorn-walk@8.3.5:
+     dependencies:
+       acorn: 8.16.0
+diff --git a/types/ambient.d.ts b/types/ambient.d.ts
+index b241ee3..e0fca2d 100644
+--- a/types/ambient.d.ts
++++ b/types/ambient.d.ts
+@@ -61,6 +61,10 @@ declare module 'node:module' {
+   export function createRequire(url: string | URL): (id: string) => unknown;
+ }
+ 
++declare module 'node:url' {
++  export function fileURLToPath(url: string | URL): string;
++}
++
+ declare module 'node:readline' {
+   export function emitKeypressEvents(stream: unknown): void;
+ }
