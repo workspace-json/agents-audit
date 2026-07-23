@@ -274,3 +274,132 @@ No cleanup command was run; a separate authorization is required to execute it.
 - Primary dirty checkout, preservation tag, stashes, worktrees, branches: **all intact** — cleanup deferred to a separate authorization.
 
 **Result: `AUTHORIZE_FINAL_CLEANUP`.**
+
+---
+
+# Final Cleanup — 2026-07-23
+
+Executed under the final-cleanup authorization. Appended (original record unchanged). Git history was **not** rewritten; no force-push; `v0.4.4`, the `preserve/*` tag, all stashes, and the dirty primary checkout were left untouched.
+
+## Drift Check
+
+**`SAFE_DRIFT`.** `origin/main` still carried the merged 0.4.4 release + docs; `v0.4.4` (`7d562fa`→`d0a19f6`) and `preserve/vr-639-640-worktree-2026-07-22` (`f5e3e0f`) intact; published `latest=0.4.4`; META-101/102 Done; META-157 open; PR #18 OPEN; stashes 0; preservation patch SHA-256 `77513874…449387` unchanged; no automation/CI references to the worktree paths removed; no worktree locks. Re-ran `git cherry`: `release/0.4.4` and `docs/reconciliation-audit-2026-07-22` now `=0` (integrated); `spike` dropped to `=2` (scaffold-cli patch landed via 0.4.4).
+
+## Documentation Path Sanitization
+
+- **Occurrences found** (tracked, current docs on `main`): `.planning/phases/01-rules-v02/01-06-SUMMARY.md` (3), `repository-reconciliation.json` (2: `root`, WT-primary `path`), `repository-reconciliation-report.md` (1), `preservation/MANIFEST.md` (1), `remediation-results.md` deviation note (1).
+- **Classifications:** planning-summary paths = `EXAMPLE_REQUIRING_SANITIZATION` → repo-relative; audit `root`/`path`/`Source checkout` = `AUDIT_PROVENANCE` → `<repo-root>`. The frozen `preservation/tracked-changes.patch` = `GENERATED_OR_FIXTURE` (captured diff) → **left untouched** (0 personal paths; its MANIFEST SHA-256 stays valid).
+- **Replacements:** all machine-specific `/Users/user1/WebstormProjects/agents-audit` → `<repo-root>` or repo-relative; MANIFEST carries a note that history was intentionally not rewritten.
+- **PR / merge:** PR **#21** → merge commit **`2327070`** on `main`. Docs-only + one planning file; no unrelated changes.
+- **Historical paths deliberately retained in Git history:** all pre-sanitization commits (e.g., `9619662`, `40f4c84`, and the planning file's original history) still contain the absolute path. Not rewritten — the path holds no secret material.
+
+## Removed Worktrees
+
+| Path | Branch | HEAD | Evidence | Result |
+|---|---|---|---|---|
+| `/private/tmp/agents-audit-release-044` | `release/0.4.4` | `3a77e1b` | clean; merged `d0a19f6` (PR #19) | `git worktree remove` ✅ |
+| `/private/tmp/aa-audit-docs` | `docs/reconciliation-audit-2026-07-22` | `40f4c84` | clean; merged `52ea7ec` (PR #20) | `git worktree remove` ✅ |
+| `/private/tmp/aa-sanitize` | `chore/sanitize-local-paths` | `f8f8cfc` | clean; merged `2327070` (PR #21) | `git worktree remove` ✅ |
+| `/private/tmp/aa-verify` (temp, this pass) | detached `2327070` | — | scratch build/typecheck env | `git worktree remove --force` ✅ |
+
+`/private/tmp/agents-audit-bin-entrypoint` could not be removed via `git worktree remove` (its `.git` link was already broken) → handled by prune below.
+
+## Pruned Administrative Entries
+
+`git worktree prune -v` (dry-run reviewed first; all "gitdir file points to non-existent location"; all approved; no locks):
+
+| Worktree Record | Branch/Commit | Evidence | Result |
+|---|---|---|---|
+| `agents-audit-npm-token-routing` | `fix/npm-token-routing` | stale gitdir; integrated | pruned ✅ |
+| `agents-audit-bin-entrypoint` | `fix/agents-audit-bin-entrypoint` | broken `.git`; integrated | pruned ✅ |
+| `agents-audit-v3d-ajv` | `spike/v3d-ajv-validate` | stale gitdir; preserved on remote | pruned ✅ |
+| `agents-audit-npm-access-command` | `fix/npm-access-command` | stale gitdir; integrated | pruned ✅ |
+| `agents-audit-npm-preflight` | `fix/npm-publish-access` | stale gitdir; integrated | pruned ✅ |
+| `agents-audit-release-042` | `release/0.4.2` | stale gitdir; integrated | pruned ✅ |
+| `agents-audit-v3d-baseline` | detached `4ab426e` | reachable from feature + main | pruned ✅ |
+| `agents-audit-npm-publisher-preflight` | `fix/npm-publisher-preflight` | stale gitdir; integrated | pruned ✅ |
+| `hac-181-prechange` | detached `8acc068` | ancestor of main | pruned ✅ |
+
+## Deleted Local Branches
+
+| Branch | Final Commit | Preservation Reference | Evidence | Result |
+|---|---|---|---|---|
+| `release/0.4.4` | `3a77e1b` | ancestor of `main` | merged PR #19 | `-d` ✅ |
+| `docs/reconciliation-audit-2026-07-22` | `40f4c84` | ancestor of `main` | merged PR #20 | `-d` ✅ |
+| `chore/sanitize-local-paths` | `f8f8cfc` | ancestor of `main` | merged PR #21 | `-d` ✅ |
+| `fix/agents-audit-bin-entrypoint` | `161cffb` | ancestor of `main` | merged PR #15 | `-d` ✅ |
+| `fix/npm-access-command` | `e3e076d` | ancestor of `main` | merged PR #13 | `-d` ✅ |
+| `fix/npm-publish-access` | `c3e69f3` | ancestor of `main` | merged PR #11 | `-d` ✅ |
+| `fix/npm-publisher-preflight` | `cf8ff0e` | ancestor of `main` | merged PR #14 | `-d` ✅ |
+| `fix/npm-token-routing` | `9f5af72` | ancestor of `main` | merged PR #12 | `-d` ✅ |
+| `fix/ci-pnpm-version` | `358b72a` | ancestor of `main` | merged PR #2 | `-d` ✅ |
+| `release/0.4.2` | `316e00f` | ancestor of `main` | merged PR #10 | `-d` ✅ |
+| `release/v0.3` | `ef5814f` | `origin/release/v0.3` (`ef5814f`) | `cherry`=0; remote preserves | `-D` (evidence recorded) ✅ |
+| `codex-root-workspace-json` | `5e35adc` | `origin/codex-root-workspace-json` (`5e35adc`) | `cherry`=0; remote preserves | `-D` ✅ |
+| `spike/v3d-ajv-validate` | `aee5f97` | `origin/spike/v3d-ajv-validate` (`aee5f97`) | only unique commit preserved on remote | `-D` ✅ |
+
+## Deleted Remote Branches
+
+| Branch | Final Commit | Preservation Reference | Evidence | Result |
+|---|---|---|---|---|
+| `origin/release/0.4.4` | `3a77e1b` | ancestor of `origin/main` | PR #19 merged this session | `push --delete` ✅ |
+| `origin/docs/reconciliation-audit-2026-07-22` | `40f4c84` | ancestor of `origin/main` | PR #20 merged this session | `push --delete` ✅ |
+| `origin/chore/sanitize-local-paths` | `f8f8cfc` | ancestor of `origin/main` | PR #21 merged this session | `push --delete` ✅ |
+
+Older merged remotes (`fix/*`, `release/0.4.2`, `release/v0.3`, `codex-root`, `spike`, `fix/verify-published-registry-propagation-retry`) were **retained** — they intentionally preserve the deleted local branches' commits, and mass remote deletion was outside the conservative scope. Eligible for a future remote-cleanup pass.
+
+## Retained Objects
+
+- **Primary dirty checkout** `<repo-root>` — `feature/vr-639-640-spec-cli-prereqs` @ `b6c092b`, 18 dirty entries — untouched.
+- **`feature/vr-639-640-spec-cli-prereqs`** branch — retained (META-157).
+- **META-157 preservation artifacts** — `preservation/tracked-changes.patch`, `untracked-validator.ts`, `MANIFEST.md` (all on `main`).
+- **`preserve/vr-639-640-worktree-2026-07-22`** tag (`f5e3e0f`) — retained.
+- **`v0.4.4`** tag (`7d562fa`→`d0a19f6`) — retained.
+- **Stashes** — none existed; nothing dropped. Dangling stash-shaped commits left untouched.
+- **PR #18 branch + worktree** — `docs/readme-clarity-final` @ `a91ec1d`, worktree `/private/tmp/agents-audit-readme-final` — retained (PR #18 OPEN).
+- **Remotes preserving deleted local branches** — listed above.
+
+## Release Workflow Follow-Up
+
+**META-158** (High, Backlog): "Release workflow: post-publish registry verification false-fails on npm propagation lag." Scope: bounded-backoff/poll for registry availability, verify identity+version+integrity after availability, don't fail on propagation delay within budget, still fail on genuine errors, visible retry logs, deterministic delayed-availability test, release-doc update. Not implemented this pass.
+
+## Final Verification
+
+- `origin/main` = `2327070` — unchanged except the approved sanitization merge (PR #21). ✅
+- `v0.4.4` intact; published `spec`/`rules`/`agents-audit@0.4.4` unchanged. ✅
+- Primary dirty checkout intact (`b6c092b`, 18 dirty); `feature/vr-639-640` intact. ✅
+- `preserve/*` tag intact; patch/manifest/validator copy intact (patch SHA-256 unchanged). ✅
+- Stashes intact (0). ✅
+- PR #18 + branch/worktree intact. ✅
+- META-157 tracked; META-158 created. ✅
+- Remaining worktrees (primary, `readme-final`) map to real directories. ✅
+- No deleted branch contained unpreserved unique work (ancestry / remote evidence per tables). ✅
+- No stale worktree admin entries remain among approved set. ✅
+- Clean canonical checkout: `pnpm install --frozen-lockfile` ✅, `pnpm -r build` ✅, `pnpm -r typecheck` ✅. ✅
+- No absolute local paths remain in current documentation (frozen patch and historical Git objects excepted, by design). ✅
+
+## Recovery References
+
+- Deferred CLI work (META-157): `git restore --source=preserve/vr-639-640-worktree-2026-07-22 --worktree -- .` or `git checkout b6c092b && git apply <repo-root>/docs/audits/worktree-reconciliation/2026-07-22/preservation/tracked-changes.patch`.
+- Deleted local branches: recover from `origin/<branch>` (retained) or from `main` (ancestors).
+
+## Deviations
+
+1. **`bin-entrypoint` worktree** removed by prune (broken `.git`) rather than `git worktree remove`; the orphaned directory on disk is inert (no longer a git worktree).
+2. **Remote branches retained** for older merged branches (conservative) — they preserve deleted local commits; documented as eligible for a future pass.
+3. **This cleanup-record commit** is a second documentation change to `main` after the sanitization merge — required by the cleanup-record deliverable; it adds no code.
+
+## Final Attestation
+
+- **Every deleted worktree proven clean or stale?** Yes — removed worktrees were `dirty=0`; pruned entries had non-existent gitdirs.
+- **Every deleted branch integrated, duplicated, superseded, or separately preserved?** Yes — 10 ancestors of `main`; `release/v0.3`/`codex-root`/`spike` `cherry`=0 and preserved on their remotes.
+- **Any removed object with unique unrecoverable work?** No.
+- **META-157 implementation still recoverable?** Yes — preserve tag + patch + dirty checkout, all intact.
+- **PR #18 unaffected?** Yes — OPEN; branch + worktree intact.
+- **All stashes retained?** Yes (none existed; nothing dropped).
+- **Release tags retained?** Yes — `v0.4.4` and `preserve/*` intact.
+- **Git history left intact?** Yes — no rewrite, no force-push, no tag moves.
+- **Current documentation free of unnecessary machine-specific paths?** Yes — sanitized to `<repo-root>`; history intentionally preserved.
+- **Repository now has only active, held, or deliberately preserved work surfaces?** Yes — active `main`; held `feature/vr-639-640` + `docs/readme-clarity-final` (PR #18); preserved tags/remotes.
+
+**Result: `RECONCILIATION_COMPLETE`.**
