@@ -194,3 +194,83 @@ Two decisions block a clean close:
 2. **Merge/publish path for PR #19.** Validated and mergeable, but merging + publishing 0.4.4 was explicitly out of scope. This is the step that will actually let META-101/102 return to Done.
 
 Everything mechanically safe in this pass is done: preservation, audit commit, PR #19, validation evidence, and the Linear correction. **Do not merge, publish, delete, or port implementation until the above is authorized.**
+
+---
+
+# Release Execution Addendum — 2026-07-23
+
+This section is **appended** (the original evidentiary record above is unchanged). It records the governed `0.4.4` merge, publish, verification, and Linear reconciliation pass that followed, and supersedes the previous pass's `REQUIRES_HUMAN_DECISION` recommendation.
+
+Pre-merge drift: **`SAFE_DRIFT`** — PR #19 MERGEABLE/CLEAN, CI `test (20)`+`test (22)` green on the merge ref, excluded CLI behaviors absent, versions correct, META-101/102 still In Review, preservation intact.
+
+## Release Merge
+
+- **PR:** #19 (`release/0.4.4` → `main`).
+- **Merge commit:** `d0a19f6` (merge commit; repo's standard "Merge pull request" policy, matching history #10–#17).
+- **Merge-candidate validation:** locally merged `origin/main` into `release/0.4.4` (no-commit) → `pnpm -r build` ✅, `pnpm -r typecheck` ✅, `pnpm -r test` **275 passed / 0 failed** (spec 36, cli 6, rules 173, agents-audit 60); merge aborted to keep the branch pristine. GitHub required checks `test (20)`/`test (22)` also green on the PR merge ref.
+- Post-merge `origin/main` carries: spec `0.4.4`, `types.ts files: string[]`, schema anchor ×2, `@workspacejson/cli` present, excluded CLI display messaging **absent**.
+
+## Published Release
+
+- **Version:** `@workspacejson/spec@0.4.4`, `@workspacejson/rules@0.4.4`, `agents-audit@0.4.4`.
+- **Not published:** `@workspacejson/cli` (`private: true`, `0.0.1`) — in-repo scaffold only; correctly skipped by changesets.
+- **Tag:** `v0.4.4` (annotated, `7d562fa`) on `d0a19f6`.
+- **Workflow:** Release run `29967929171` via `workflow_dispatch` on `main` — the repo's established path (the tag trigger did not fire; every prior release incl. 0.4.3 used dispatch, and no `v0.4.3` tag ever existed). The `Publish packages` step **succeeded**; changesets reported `packages published successfully: agents-audit@0.4.4, @workspacejson/rules@0.4.4, @workspacejson/spec@0.4.4`.
+- **Known false-red:** the post-publish `Verify published packages from the registry` step failed on the registry-propagation race (documented flake); the publish itself succeeded and propagation completed within ~1 min. `latest=0.4.4` confirmed via independent HTTPS reads.
+- **Integrity (published tarball shasums):** spec `8a3df59c…9f65`, rules `f77e1d60…0ebb`, agents-audit `263f9b84…1ad5` — all matched on download.
+
+## Published-Artifact Verification
+
+Clean-environment procedure: downloaded each `0.4.4` tarball, verified shasum, extracted; installed `ajv` into a throwaway app and imported the **published** `@workspacejson/spec` dist.
+
+- Versions: all three report `0.4.4`. ✅
+- **META-101:** published `schema/v1.json` `coChange.items.files` documented "Unordered pair (set semantics — position is NOT meaningful; join by membership, not index)", `minItems:2/maxItems:2`; `types.ts` → `files: string[]`. Functional smoke: a pair validates identically in `[a,b]` and `[b,a]`, a 3-file entry is rejected, `validate({})` rejected. ✅
+- **META-102:** "repository-root-relative POSIX path" anchor at 2 sites in published `schema/v1.json`; strict AJV validator loads and enforces at runtime. ✅
+- **Contents clean:** no `/Users/`, `node_modules/`, dotenv, npmrc, tokens, or keys in any tarball; spec = 15 files (matches `fileCount`).
+- **Excluded behavior absent:** published `agents-audit` dist has neither excluded display string ("moved aside", "was not recovered"); `invalidFileMoved` appears only as the pre-existing generate result field (5 refs already in 0.4.3), not the deferred CLI messaging.
+
+## Linear Final State
+
+- **META-101:** In Review → **Done** (`completedAt 2026-07-23T00:10`), closing comment `b37f6f89` with published-artifact evidence + PR #19 link.
+- **META-102:** In Review → **Done** (`completedAt 2026-07-23T00:10`), closing comment `e12654ab`.
+- Done applied **only after** published-artifact verification (In Review → released → Done). Both comments cite **META-31** as the concrete Merged-vs-Done case.
+- **META-157** (new, Backlog, Medium, not started): the deferred CLI behaviors + tests follow-up; PR #19 linked.
+
+## Documentation Merge
+
+- **PR #20** (`docs/reconciliation-audit-2026-07-22` → `main`): docs-only, confirmed. This addendum is committed to that branch, then PR #20 is merged as the final governed step of this pass (merge commit on `main`).
+
+## Preserved Deferred Work
+
+Nothing lost; the deferred CLI work is triple-preserved and tracked in **META-157**:
+- CLI implementation changes: `cli.ts` drift-gate reorder + `invalidFileMoved` messaging.
+- Coupled tests: two `cli.integration.test.ts` cases.
+- Preservation tag `preserve/vr-639-640-worktree-2026-07-22` (`f5e3e0f`); patch `preservation/tracked-changes.patch` (SHA-256 `77513874…449387`); manifest `preservation/MANIFEST.md`; verbatim `preservation/untracked-validator.ts`.
+- Recovery: `git restore --source=preserve/vr-639-640-worktree-2026-07-22 --worktree -- .` or `git checkout b6c092b && git apply …/tracked-changes.patch`.
+
+## Cleanup Readiness
+
+Cleanup is **prepared, not executed.** Per-target status:
+
+| Target | Unique work? | Integrated? | Preserved? | Dependency remaining? | Eligible? | Precondition |
+|---|---|---|---|---|---|---|
+| `release/0.4.4` branch + `/private/tmp/agents-audit-release-044` worktree | was 4 commits | **Yes** (merged `d0a19f6`, published) | n/a | none | **Yes** | `git worktree remove` then `git branch -d release/0.4.4` (archive tag optional) |
+| `spike/v3d-ajv-validate` (+ worktree) | 3 commits, superseded | via 0.4.2 + 0.4.4 | tag `archive/spike-v3d-ajv-validate` | none | **Yes** | keep archive tag; `git branch -D` |
+| `feature/vr-639-640-spec-cli-prereqs` (primary, dirty) | committed superseded; **dirty = META-157 work** | spec parts via 0.4.4 | tag + patch | **META-157 open** | **No** | hold until META-157 lands; never `checkout .`/`reset --hard`/`clean` |
+| `fix/npm-*` (4), `fix/agents-audit-bin-entrypoint`, `fix/ci-pnpm-version`, `release/0.4.2`, `release/v0.3`, `codex-root-workspace-json` | none (`git cherry`=0) | Yes | git history | none | **Yes** | optional archive tag; `git branch -d` |
+| 8 prunable worktree admin entries (missing dirs) | none | n/a | n/a | none | **Yes** | `git worktree prune -v` |
+| `docs/readme-clarity-final` (PR #18) | 1 commit | No | n/a | **PR #18 open** | **No** | resolve PR #18 first |
+| `docs/reconciliation-audit-2026-07-22` (PR #20) | 2 commits | on merge | n/a | PR #20 | after merge | delete branch after PR #20 merges |
+| `preserve/…` tag, dangling stashes, `v0.4.4` tag | preservation / history | — | — | META-157 (preserve tag) | **No** | retain; not cleanup targets this cycle |
+
+No cleanup command was run; a separate authorization is required to execute it.
+
+## Final Outcome
+
+- Canonical `origin/main`: **`d0a19f6`** (0.4.4 merged).
+- Published + verified: `@workspacejson/spec`/`rules`/`agents-audit@0.4.4`.
+- META-101, META-102: **Done** (post-verification). META-157: created for the deferred CLI work.
+- PR #20: merged (this addendum is its final content).
+- Primary dirty checkout, preservation tag, stashes, worktrees, branches: **all intact** — cleanup deferred to a separate authorization.
+
+**Result: `AUTHORIZE_FINAL_CLEANUP`.**
