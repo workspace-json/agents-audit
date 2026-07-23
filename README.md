@@ -10,9 +10,10 @@
   </a>
 </p>
 
-**workspace.json** is an open specification for structured AI agent codebase
-intelligence. A machine-generated JSON file at `.agents/workspace.json`
-gives AI coding agents structured context about your repository.
+**workspace.json** is an open specification for committed repository
+intelligence. A portable JSON artifact at `.agents/workspace.json` combines
+producer-generated repository metadata with evidence authored by humans or
+specialized tools.
 
 ([spec](./packages/spec/) · [rendered docs](https://workspacejson.dev/spec/) · [changelog](./CHANGELOG.md))
 
@@ -20,10 +21,12 @@ gives AI coding agents structured context about your repository.
 - [Buildomator (formerly gsd-plugin)](https://buildomator.com) — independent Claude Code implementation reading `.agents/workspace.json` at SessionStart
 - [`@workspacejson/codex-mcp`](https://www.npmjs.com/package/@workspacejson/codex-mcp) — Codex MCP server for consulting repository intelligence before edits
 
-`workspace.json` separates machine-generated topology from human-authored manual
-evidence. Regeneration updates the generated topology while preserving `manual`
-evidence verbatim. See [Billfold](https://www.billfold.tech/) for a production
-workflow built around this distinction.
+`workspace.json` separates producer-generated topology from human-authored manual
+evidence. Regeneration updates producer-owned sections while preserving manual
+evidence verbatim. See the public
+[Billfold fixture](https://github.com/workspace-json/billfold) for a reproducible
+example of generated repository metadata combined with human-authored behavioral
+evidence.
 
 This repository is the canonical source for the agents-audit release family.
 
