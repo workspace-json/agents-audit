@@ -42,7 +42,7 @@
 
 | Surface | Path | Branch / Commit | Unique Work | Linear | Validation | Risk | Proposed Disposition |
 |---|---|---|---|---|---|---|---|
-| WT-primary | `…/WebstormProjects/agents-audit` | `feature/vr-639-640-spec-cli-prereqs` @ `b6c092b` **(dirty)** | Committed: superseded. **Uncommitted: unique** | META-101/102 | not run (read-only) | **HIGH** | `MANUAL_RECONCILIATION_REQUIRED` |
+| WT-primary | `<repo-root>` | `feature/vr-639-640-spec-cli-prereqs` @ `b6c092b` **(dirty)** | Committed: superseded. **Uncommitted: unique** | META-101/102 | not run (read-only) | **HIGH** | `MANUAL_RECONCILIATION_REQUIRED` |
 | WT-release-044 | `/private/tmp/agents-audit-release-044` | `release/0.4.4` @ `3a77e1b` (clean) | Yes — full 0.4.4 candidate | META-101/102 | CI n/a | MEDIUM | `MERGE_CANDIDATE` (open PR) |
 | WT-v3d-ajv | `/private/tmp/agents-audit-v3d-ajv` *(dir missing)* | `spike/v3d-ajv-validate` @ `aee5f97` | Superseded by 0.4.2 + 0.4.4 | — | — | LOW | `SUPERSEDED` |
 | WT-readme | `/private/tmp/agents-audit-readme-final` | `docs/readme-clarity-final` @ `a91ec1d` (clean) | 1 doc commit | — | PR #18 MERGEABLE | LOW | `MERGE_CANDIDATE` |
