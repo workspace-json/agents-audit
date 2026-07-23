@@ -137,7 +137,7 @@ Not modified: META-97 (census anchor) — the audit proposed a comment there, bu
 1. **CHANGELOG port became a no-op.** The audit assumed the 0.4.4 narrative was missing from release/0.4.4; it is already present and truthful. Reconciliation = confirming that and excluding the feature branch's unverifiable claims.
 2. **CLI tests not ported.** The audit listed them as portable "tests only." Execution proved they are coupled to unshipped `cli.ts` behavior; porting was therefore out of scope. Reclassified to `REQUIRES_HUMAN_DECISION`.
 3. **release/0.4.4 not refreshed onto origin/main.** Left 2-behind (docs-only) rather than performing an unnecessary history op; flagged for "Update branch" at merge time. PR is `MERGEABLE` regardless.
-4. **Personal absolute path in committed audit docs.** `/Users/user1/...` appears in `repository-reconciliation.json` and `preservation/MANIFEST.md` as legitimate provenance evidence. Not scrubbed (would falsify the record) — but recommend a scrub pass before this repo goes public as the `workspacejson` standard.
+4. **Personal absolute path in committed audit docs.** The local checkout path appeared in `repository-reconciliation.json`, `repository-reconciliation-report.md`, and `preservation/MANIFEST.md` as provenance evidence. **Sanitized to `<repo-root>` in the Final Cleanup pass** (forward commit; Git history intentionally not rewritten — the path contained no secret material). See the Final Cleanup section below.
 
 ---
 

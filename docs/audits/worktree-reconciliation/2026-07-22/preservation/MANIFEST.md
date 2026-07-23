@@ -1,6 +1,8 @@
 # Preservation Manifest — `feature/vr-639-640-spec-cli-prereqs` working tree
 
-**Created:** 2026-07-22 · **Source checkout:** `/Users/user1/WebstormProjects/agents-audit` (branch `feature/vr-639-640-spec-cli-prereqs`, HEAD `b6c092b`)
+**Created:** 2026-07-22 · **Source checkout:** `<repo-root>` (branch `feature/vr-639-640-spec-cli-prereqs`, HEAD `b6c092b`)
+
+> Note: current instructions use the `<repo-root>` placeholder for the local checkout path. Git history was intentionally not rewritten; the original absolute path contained no secret material.
 
 Purpose: capture the only known copy of the uncommitted reconciliation work **before** any integration action. Preservation was fully non-destructive — the source working tree was not switched, staged, reset, or cleaned. Three independent mechanisms preserve the same content.
 

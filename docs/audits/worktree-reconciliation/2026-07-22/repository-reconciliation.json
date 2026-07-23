@@ -7,7 +7,7 @@
   "repository": {
     "name": "agents-audit",
     "remote": "https://github.com/workspace-json/agents-audit",
-    "root": "/Users/user1/WebstormProjects/agents-audit",
+    "root": "<repo-root>",
     "canonicalBranch": "origin/main",
     "canonicalHead": "5a0e37e",
     "canonicalHeadFull": "5a0e37e",
@@ -25,7 +25,7 @@
     }
   },
   "worktrees": [
-    { "id": "WT-primary", "path": "/Users/user1/WebstormProjects/agents-audit", "branch": "feature/vr-639-640-spec-cli-prereqs", "head": "b6c092b", "dirExists": true, "clean": false, "prunable": false, "note": "Primary checkout. Dirty tree = the only copy of the 0.4.4 reconciliation (CHANGELOG split-brain narrative + validator wiring + 2 unique CLI tests).", "disposition": "MANUAL_RECONCILIATION_REQUIRED" },
+    { "id": "WT-primary", "path": "<repo-root>", "branch": "feature/vr-639-640-spec-cli-prereqs", "head": "b6c092b", "dirExists": true, "clean": false, "prunable": false, "note": "Primary checkout. Dirty tree = the only copy of the 0.4.4 reconciliation (CHANGELOG split-brain narrative + validator wiring + 2 unique CLI tests).", "disposition": "MANUAL_RECONCILIATION_REQUIRED" },
     { "id": "WT-bin", "path": "/private/tmp/agents-audit-bin-entrypoint", "branch": "fix/agents-audit-bin-entrypoint", "head": "161cffb", "dirExists": true, "clean": true, "prunable": false, "disposition": "ALREADY_INTEGRATED" },
     { "id": "WT-npm-access", "path": "/private/tmp/agents-audit-npm-access-command", "branch": "fix/npm-access-command", "head": "e3e076d", "dirExists": false, "clean": null, "prunable": true, "disposition": "ALREADY_INTEGRATED" },
     { "id": "WT-npm-preflight", "path": "/private/tmp/agents-audit-npm-preflight", "branch": "fix/npm-publish-access", "head": "c3e69f3", "dirExists": false, "clean": null, "prunable": true, "disposition": "ALREADY_INTEGRATED" },

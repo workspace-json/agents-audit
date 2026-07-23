@@ -133,9 +133,9 @@ None. Test fixtures contain only synthetic data per the plan's threat model (T-0
 ## Self-Check: PASSED
 
 Files verified:
-- `/Users/user1/WebstormProjects/agents-audit/packages/rules/src/testing/rule-tester.ts` — FOUND
-- `/Users/user1/WebstormProjects/agents-audit/packages/rules/src/testing/__tests__/rule-tester.test.ts` — FOUND
-- `/Users/user1/WebstormProjects/agents-audit/types/ambient.d.ts` — FOUND (extended)
+- `packages/rules/src/testing/rule-tester.ts` — FOUND
+- `packages/rules/src/testing/__tests__/rule-tester.test.ts` — FOUND
+- `types/ambient.d.ts` — FOUND (extended)
 
 Commits verified:
 - e7371b1 (RED) — FOUND in git log
